@@ -24,27 +24,39 @@ App.Init = function(canvas) {
 };
 
 function createInterface(ctx) {
-	s = new App.Shape(10,10, 20, 20, null);
-	s.draw(ctx);
+	s = new App.Shape(30, 30, 100, 100, '#000000', "none");
+
+	App.AddDrawObject("tracking", s);
 };
 
 
 App.Draw = function() {
 
+	// clear everything and redraw
 	var ctx = App.Draw_CTX;
 	ctx.clearRect(0,0, ctx.canvas.width, ctx.canvas.height);
-    
-    // Draw coordinates
-    var s = new App.Shape(30, 30, 100, 100, '#000000', "x: " + this.MouseX + " y: " + this.MouseY);
-	s.draw(ctx);
+
+	for(i = 0; i < App.DrawObjects.length; i++) {
+
+		var s = App.DrawObjects[i];
+
+		s.draw(ctx);
+	}
+
 };
+
+App.UpdateGameState = function() {
+	
+	// left off here - just finalized making the model update itself
+	// though I think it needs some refactoring to make it clearer what is going on
+	//App.DrawObjects[0] = new App.Shape(30, 30, 100, 100, '#000000', "x: " + this.MouseX + " y: " + this.MouseY);
+
+}
 
 App.GameLoop = function() {
     window.requestAnimationFrame(App.GameLoop);
     
-    /* left off here with refactoring and adding gameloop
-    now need to add the game logic updating function */
-    
+    App.UpdateGameState();
     App.Draw();
 }
 

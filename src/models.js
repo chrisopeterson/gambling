@@ -12,11 +12,14 @@ App.Shape = function(x, y, height, width, fill, fillText) {
 	this.height = height || 1;
 	this.fill = fill || '#AAAAAA';
 	this.fillText = fillText;
+	this.fnUpdate = function() { this.fillText = "x: " + App.MouseX + " y: " + App.MouseY; };
 }
 
 // Shape functions
 App.Shape.prototype.draw = function(drawingContext) {
+	this.fnUpdate();
 	drawingContext.fillStyle = this.fill;
 	drawingContext.fillRect(this.x, this.y, this.width, this.height);
 	drawingContext.fillText(this.fillText, this.x, this.y);
 }
+
