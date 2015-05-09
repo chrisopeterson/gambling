@@ -16,7 +16,7 @@ App.Shape = function(x, y, height, width, fill, fillText, func) {
 }
 
 // Shape w. border
-App.BorderShape = function(x, y, height, width, fill, borderFill, borderSize, fillText, func) {
+App.BorderShape = function(x, y, width, height, fill, borderFill, borderSize, fillText, func) {
 	this.x = x || 0;
 	this.y = y || 0;
 	this.width = width || 0;
@@ -41,7 +41,6 @@ App.BorderShape.prototype.draw = function(drawingContext) {
 	
 	drawingContext.strokeStyle = this.borderFill;
     drawingContext.lineWidth   = this.borderSize;
-    drawingContext.strokeRect(10,10, 100,100);
-    drawingContext.fillText(this.fillText, this.x, this.y);
-
+    drawingContext.strokeRect(this.x, this.y, this.width, this.height);
+    drawingContext.fillText(this.fillText, this.x + 5, this.y + 12); // Add padding to text
 }
