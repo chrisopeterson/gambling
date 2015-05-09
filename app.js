@@ -24,9 +24,19 @@ App.Init = function(canvas) {
 };
 
 function createInterface(ctx) {
-	s = new App.Shape(30, 30, 100, 100, '#000000', "none");
 
+	// background
+	bg = new App.Shape(0, 0, 500, 500, '#478d47', null, null);
+	App.AddDrawObject("background", bg);
+
+	// Tracking object
+	var func = function() { this.fillText = "x: " + App.MouseX + " y: " + App.MouseY; };
+	s = new App.Shape(440, 12, 0, 0, '#000000', "none", func);
 	App.AddDrawObject("tracking", s);
+	
+	// build rest of interface.
+	var passLine = new App.BorderShape(10, 300, 50, 300, null, '#ffffff', 2, 'Pass Line', null);
+	App.AddDrawObject("passLine", passLine);
 };
 
 
