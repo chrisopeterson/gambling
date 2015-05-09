@@ -14,6 +14,7 @@ App.Init = function(canvas) {
 	
 	// Set Global Event Handling
 	canvas.onmousemove = event_MouseMove;
+	canvas.onmouseup = event_MouseUp;
 
 	// Draw initial interface
 	createInterface(App.Draw_CTX);
@@ -35,7 +36,8 @@ function createInterface(ctx) {
 	App.AddDrawObject("tracking", s);
 	
 	// build rest of interface.
-	var passLine = new App.BorderShape(10, 300, 50, 300, null, '#ffffff', 2, 'Pass Line', null);
+	// Passline first
+	var passLine = new App.BorderShape(10, 400, 480, 50, null, '#ffffff', 2, 'Pass Line', null);
 	App.AddDrawObject("passLine", passLine);
 };
 
@@ -57,9 +59,7 @@ App.Draw = function() {
 
 App.UpdateGameState = function() {
 	
-	// left off here - just finalized making the model update itself
-	// though I think it needs some refactoring to make it clearer what is going on
-	//App.DrawObjects[0] = new App.Shape(30, 30, 100, 100, '#000000', "x: " + this.MouseX + " y: " + this.MouseY);
+	// TODO
 
 }
 
@@ -72,7 +72,7 @@ App.GameLoop = function() {
 
 
 //
-// Event Handlers
+// Handle Canvas level events
 //
 
 function event_MouseMove(e) {
@@ -91,4 +91,16 @@ function event_MouseMove(e) {
     // Calculate the mouse location
     App.MouseX = e.pageX - offsetX;
     App.MouseY = e.pageY - offsetY;
+}
+
+function event_MouseUp(e) {
+
+	// LEFT OFF HERE
+	// need to create a hit test function here just as a first step.
+	// Basic order of operations would be...
+	// 1. Handle click event - done
+	// 2. Check the Application Draw objects array and determine if the object is at the x/y point clicked
+	// 3. Send 'clicked' event to that object and handle whatever action is needed there. 
+
+	//alert('position is x:' +  App.MouseX + ' Y:' + App.MouseY);
 }
