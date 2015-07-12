@@ -2,6 +2,8 @@
 // App.js - Primary application control
 //
 
+"use strict";
+
 // Establish namespace
 window.App = window.App || {};
 
@@ -17,7 +19,7 @@ App.Init = function(canvas) {
 	canvas.onmouseup = event_MouseUp;
 
 	// Draw initial interface
-	createInterface(App.Draw_CTX);
+	App.UI.PrepInterface();
 	
 	// Begin Running Game Loop
 	App.GameLoop();
@@ -25,37 +27,11 @@ App.Init = function(canvas) {
 };
 
 function createInterface(ctx) {
-
-	// background
-	bg = new App.Shape(0, 0, 500, 500, '#478d47', null, null);
-	App.AddDrawObject("background", bg);
-
-	// Tracking object
-	var func = function() { this.fillText = "x: " + App.MouseX + " y: " + App.MouseY; };
-	s = new App.Shape(440, 12, 0, 0, '#000000', "none", func);
-	App.AddDrawObject("tracking", s);
 	
-	// build rest of interface.
-	// Passline first
-	var passLine = new App.BorderShape(10, 400, 480, 50, null, '#ffffff', 2, 'Pass Line', null);
-	App.AddDrawObject("passLine", passLine);
+	App.UI.DrawInterface();
+	
 };
 
-
-App.Draw = function() {
-
-	// clear everything and redraw
-	var ctx = App.Draw_CTX;
-	ctx.clearRect(0,0, ctx.canvas.width, ctx.canvas.height);
-
-	for(i = 0; i < App.DrawObjects.length; i++) {
-
-		var s = App.DrawObjects[i];
-
-		s.draw(ctx);
-	}
-
-};
 
 App.UpdateGameState = function() {
 	
@@ -67,7 +43,7 @@ App.GameLoop = function() {
     window.requestAnimationFrame(App.GameLoop);
     
     App.UpdateGameState();
-    App.Draw();
+    App.UI.Draw();
 }
 
 
