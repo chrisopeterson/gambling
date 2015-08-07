@@ -13,7 +13,7 @@ window.App.UI = window.App.UI || {};
 App.UI.DrawObjects = [];
 
 App.UI.AddDrawObject = function(name, obj) {
-	App.UI.DrawObjects.push(obj);
+	App.UI.DrawObjects.push({ "key": name, "value": obj });
 }
 
 // Function to draw all the objects in the DrawObject array
@@ -26,7 +26,7 @@ App.UI.Draw = function() {
 
 	for(let i = 0; i < App.UI.DrawObjects.length; i++) {
 
-		var s = App.UI.DrawObjects[i];
+		var s = App.UI.DrawObjects[i].value;
 
 		s.draw(ctx);
 	}
@@ -47,13 +47,36 @@ App.UI.PrepInterface = function() {
 	App.UI.AddDrawObject("tracking", track);
 	
 	// Pass line
-	let passLine = new UI_RectangleBorder(10, 400, 480, 50, null, '#ffffff', 2, 'Pass Line', null);
+	let passLine = new UI_RectangleBorder(10, 400, 480, 40, null, '#ffffff', 2, 'Pass Line', null);
 	App.UI.AddDrawObject("passline", passLine);
+	
+	// Dont Pass Line
+	let dontPassLine = new UI_RectangleBorder(10, 350, 480, 40, null, '#ffffff', 2, 'Don\'t Pass Line', null);
+	App.UI.AddDrawObject("dontPassline", dontPassLine);
 	
 	//  Draw
 	App.UI.Draw();
 };
 
+//
+// UI Event Handling
+//
+App.UI.DetectClick = function(e) {
+	
+	// Loop through draw objects and detect which ones were clicked on
+	for(var i = 0; i < App.UI.DrawObjects.length; i++) {
+		let obj = App.UI.DrawObjects[i].value;
+		let key = App.UI.DrawObjects[i].key;
+		
+		// Based on position and size, was the object clicked on?
+		if(App.MouseX > obj.XPosition && App.MouseX < obj.XPosition + obj.Width) {
+			if(App.MouseY > obj.YPosition && App.MouseY < obj.YPosition + obj.Height) {
+				alert(key); // tested and it works
+			}
+		}
+	}
+	
+}
 
 
 //
@@ -61,7 +84,7 @@ App.UI.PrepInterface = function() {
 //
 
 // Was unable to figure out how to get the drawing to run in the parent class so each
-// UI piece has to draw everything.
+// UI piece has to draw everything...
 
 // Base class for all shapes
 class UI_Shape {

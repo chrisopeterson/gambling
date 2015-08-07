@@ -21,7 +21,7 @@ App.Init = function(canvas) {
 	// Draw initial interface
 	App.UI.PrepInterface();
 	
-	// Begin Running Game Loop
+	// Begin Game Loop
 	App.GameLoop();
 	
 };
@@ -78,5 +78,7 @@ function event_MouseUp(e) {
 	// 2. Check the Application Draw objects array and determine if the object is at the x/y point clicked
 	// 3. Send 'clicked' event to that object and handle whatever action is needed there. 
 
-	//alert('position is x:' +  App.MouseX + ' Y:' + App.MouseY);
+	
+	
+	App.UI.DetectClick(e);
 }
