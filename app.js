@@ -67,18 +67,11 @@ function event_MouseMove(e) {
     // Calculate the mouse location
     App.MouseX = e.pageX - offsetX;
     App.MouseY = e.pageY - offsetY;
+    
+    // Trigger any mouseMove events
+    App.UI.DetectMouseMove(e);
 }
 
 function event_MouseUp(e) {
-
-	// LEFT OFF HERE
-	// need to create a hit test function here just as a first step.
-	// Basic order of operations would be...
-	// 1. Handle click event - done
-	// 2. Check the Application Draw objects array and determine if the object is at the x/y point clicked
-	// 3. Send 'clicked' event to that object and handle whatever action is needed there. 
-
-	
-	
 	App.UI.DetectClick(e);
 }

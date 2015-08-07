@@ -33,7 +33,7 @@ App.UI.Draw = function() {
 };
 
 //
-// Draw the initial interface
+// Load initial interface pieces
 //
 App.UI.PrepInterface = function() {
 
@@ -42,12 +42,20 @@ App.UI.PrepInterface = function() {
 	App.UI.AddDrawObject("background", bg);
 	
 	// x/y coordinates for dev use
-	let xy_track = function() { this.fillText = "x: " + App.MouseX + " y: " + App.MouseY; };
-	let track = new UI_Rectangle(440, 12, 0, 0, null, 'none', xy_track);
+	let track_events = {
+		"mouseMove" : function(obj) { obj.fillText = "x: " + App.MouseX + " y: " + App.MouseY }
+	}
+	
+	let track = new UI_Rectangle(440, 12, 0, 0, null, 'none', track_events);
 	App.UI.AddDrawObject("tracking", track);
 	
 	// Pass line
-	let passLine = new UI_RectangleBorder(10, 400, 480, 40, null, '#ffffff', 2, 'Pass Line', null);
+	let pass_events = {
+		"mouseMove" : function(obj) { obj.FillText = "Pass Line - Hover" },
+		"onClick" : function(obj) { alert("You clicked the pass line!" ) }
+	}
+	
+	let passLine = new UI_RectangleBorder(10, 400, 480, 40, null, '#ffffff', 2, 'Pass Line', pass_events);
 	App.UI.AddDrawObject("passline", passLine);
 	
 	// Dont Pass Line
@@ -68,14 +76,28 @@ App.UI.DetectClick = function(e) {
 		let obj = App.UI.DrawObjects[i].value;
 		let key = App.UI.DrawObjects[i].key;
 		
+		// First check if object subscribes to click event
+		if(obj.Events["onClick"] == null) { continue; }
+		
 		// Based on position and size, was the object clicked on?
 		if(App.MouseX > obj.XPosition && App.MouseX < obj.XPosition + obj.Width) {
 			if(App.MouseY > obj.YPosition && App.MouseY < obj.YPosition + obj.Height) {
-				alert(key); // tested and it works
+				obj.Events.onClick(obj);
 			}
 		}
 	}
-	
+}
+
+App.UI.DetectMouseMove = function(e) {
+	// Loop through draw objects and detect which ones respond to the mouseMove event
+	for(var i = 0; i < App.UI.DrawObjects.length; i++) {
+		let obj = App.UI.DrawObjects[i].value;
+		let key = App.UI.DrawObjects[i].key;
+		
+		if(obj.Events["mouseMove"] != null) {
+			obj.Events.mouseMove(obj);
+		}
+	}
 }
 
 
@@ -88,26 +110,25 @@ App.UI.DetectClick = function(e) {
 
 // Base class for all shapes
 class UI_Shape {
-	constructor(x, y, width, height, func) {
+	constructor(x, y, width, height, events) {
 		this.XPosition = x || 0;
 		this.YPosition = y || 0;
 		this.Width = width || 0;
 		this.Height = height || 0;
-		// Function to attach to the shape
-		this.fnUpdate = func == null ? function() { } : func;
+		// Attach events to the object
+		this.Events = events == null ? Object.create(null) : events;
 	}
 }
 
 
 class UI_Rectangle extends UI_Shape {
-	constructor(x, y, width, height, fill, fillText, func) {
-		super(x, y, width, height, func);
+	constructor(x, y, width, height, fill, fillText, events) {
+		super(x, y, width, height, events);
 
 		this.fill = fill || 'rgba(255, 0, 0, 0)'; // fill color or transparent
 		this.fillText = fillText || '';
 	}
 	draw(drawingContext) {
-		this.fnUpdate();
 		drawingContext.fillStyle = this.fill;
 		drawingContext.fillRect(this.XPosition, this.YPosition, this.Width, this.Height);
 		drawingContext.fillStyle = '#000000'; // for black text
@@ -116,15 +137,14 @@ class UI_Rectangle extends UI_Shape {
 }
 
 class UI_RectangleBorder extends UI_Rectangle {
-	constructor(x, y, width, height, fill, borderFill, borderSize, fillText, func) {
-		super(x, y, width, height, fill, fillText, func);
+	constructor(x, y, width, height, fill, borderFill, borderSize, fillText, events) {
+		super(x, y, width, height, fill, fillText, events);
 		
 		this.borderFill = borderFill;
 		this.borderSize = borderSize;
 	}
 	draw(drawingContext) {
 		
-		this.fnUpdate();
 		drawingContext.fillStyle = this.fill;
 		drawingContext.fillRect(this.XPosition, this.YPosition, this.Width, this.Height);
 		drawingContext.fillStyle = '#000000'; // for black text
