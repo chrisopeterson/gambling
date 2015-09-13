@@ -51,7 +51,7 @@ App.UI.PrepInterface = function() {
 	
 	// Pass line
 	let pass_events = {
-		"mouseMove" : function(obj) { obj.FillText = "Pass Line - Hover" },
+		"mouseMove" : function(obj) { obj.fillText = "Pass Line - Hover" },
 		"onClick" : function(obj) { alert("You clicked the pass line!" ) }
 	}
 	
@@ -80,10 +80,9 @@ App.UI.DetectClick = function(e) {
 		if(obj.Events["onClick"] == null) { continue; }
 		
 		// Based on position and size, was the object clicked on?
-		if(App.MouseX > obj.XPosition && App.MouseX < obj.XPosition + obj.Width) {
-			if(App.MouseY > obj.YPosition && App.MouseY < obj.YPosition + obj.Height) {
-				obj.Events.onClick(obj);
-			}
+		if(detectCollision(App.MouseX, App.MouseY, obj.XPosition, obj.YPosition, obj.Width, obj.Height))
+		{
+			obj.Events.onClick(obj);
 		}
 	}
 }
@@ -94,10 +93,26 @@ App.UI.DetectMouseMove = function(e) {
 		let obj = App.UI.DrawObjects[i].value;
 		let key = App.UI.DrawObjects[i].key;
 		
-		if(obj.Events["mouseMove"] != null) {
+		// Check if object subscribes to event
+		
+		if(obj.Events["mouseMove"] == null) { continue; }
+		
+		// Detect if object is where the mouse is
+		if(detectCollision(App.MouseX, App.MouseY, obj.XPosition, obj.YPosition, obj.Width, obj.Height)
+			|| key == "tracking")
+		{
 			obj.Events.mouseMove(obj);
 		}
 	}
+}
+
+function detectCollision(x,y, objectx, objecty, objectwidth, objectheight) {
+	if(x > objectx && x < objectx + objectwidth) {
+		if(y >  objecty && y < objecty + objectheight) {
+			return true;
+		}
+	}
+	return false;
 }
 
 

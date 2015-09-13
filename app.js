@@ -14,6 +14,9 @@ App.Init = function(canvas) {
 	App.MouseX = 0;
 	App.MouseY = 0;
 	
+	// Initialize game state
+	App.State.Init();
+	
 	// Set Global Event Handling
 	canvas.onmousemove = event_MouseMove;
 	canvas.onmouseup = event_MouseUp;
