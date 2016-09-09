@@ -71,8 +71,9 @@ function event_MouseMove(e) {
     App.MouseX = e.pageX - offsetX;
     App.MouseY = e.pageY - offsetY;
     
-    // Trigger any mouseMove events
+    // Trigger any mouse movement events
     App.UI.DetectMouseMove(e);
+    App.UI.DetectMouseLeave(e);
 }
 
 function event_MouseUp(e) {

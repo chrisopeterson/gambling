@@ -24,7 +24,7 @@ App.UI.Draw = function() {
 	var ctx = App.Draw_CTX;
 	ctx.clearRect(0,0, ctx.canvas.width, ctx.canvas.height);
 
-	for(let i = 0; i < App.UI.DrawObjects.length; i++) {
+	for(var i = 0; i < App.UI.DrawObjects.length; i++) {
 
 		var s = App.UI.DrawObjects[i].value;
 
@@ -38,33 +38,35 @@ App.UI.Draw = function() {
 App.UI.PrepInterface = function() {
 
 	// Green Background
-	let bg = new UI_Rectangle(0, 0, 500, 500, '#478d47', null, null);
+	var bg = new UI_Rectangle(0, 0, 500, 500, '#478d47', null, null);
 	App.UI.AddDrawObject("background", bg);
 	
 	// x/y coordinates for dev use
-	let track_events = {
+	var track_events = {
 		"mouseMove" : function(obj) { obj.fillText = "x: " + App.MouseX + " y: " + App.MouseY }
 	}
 	
-	let track = new UI_Rectangle(440, 12, 0, 0, null, 'none', track_events);
+	var track = new UI_Rectangle(440, 12, 0, 0, null, 'none', track_events);
 	App.UI.AddDrawObject("tracking", track);
 	
 	// Pass line
-	let pass_events = {
+	var pass_events = {
 		"mouseMove" : function(obj) { obj.fillText = "Pass Line - Hover" },
+		"mouseLeave" : function(obj) { obj.fillText = "Pass Line - Leave"},
 		"onClick" : function(obj) { alert("You clicked the pass line!" ) }
 	}
 	
-	let passLine = new UI_RectangleBorder(10, 400, 480, 40, null, '#ffffff', 2, 'Pass Line', pass_events);
+	var passLine = new UI_RectangleBorder(10, 400, 480, 40, null, '#ffffff', 2, 'Pass Line', pass_events);
 	App.UI.AddDrawObject("passline", passLine);
 	
 	// Dont Pass Line
-	let dontPassLine = new UI_RectangleBorder(10, 350, 480, 40, null, '#ffffff', 2, 'Don\'t Pass Line', null);
+	var dontPassLine = new UI_RectangleBorder(10, 350, 480, 40, null, '#ffffff', 2, 'Don\'t Pass Line', null);
 	App.UI.AddDrawObject("dontPassline", dontPassLine);
 	
 	//  Draw
 	App.UI.Draw();
 };
+
 
 //
 // UI Event Handling
@@ -73,10 +75,10 @@ App.UI.DetectClick = function(e) {
 	
 	// Loop through draw objects and detect which ones were clicked on
 	for(var i = 0; i < App.UI.DrawObjects.length; i++) {
-		let obj = App.UI.DrawObjects[i].value;
-		let key = App.UI.DrawObjects[i].key;
+		var obj = App.UI.DrawObjects[i].value;
+		var key = App.UI.DrawObjects[i].key;
 		
-		// First check if object subscribes to click event
+		// Skip if object does not subscribe to click event
 		if(obj.Events["onClick"] == null) { continue; }
 		
 		// Based on position and size, was the object clicked on?
@@ -90,18 +92,39 @@ App.UI.DetectClick = function(e) {
 App.UI.DetectMouseMove = function(e) {
 	// Loop through draw objects and detect which ones respond to the mouseMove event
 	for(var i = 0; i < App.UI.DrawObjects.length; i++) {
-		let obj = App.UI.DrawObjects[i].value;
-		let key = App.UI.DrawObjects[i].key;
+		var obj = App.UI.DrawObjects[i].value;
+		var key = App.UI.DrawObjects[i].key;
 		
-		// Check if object subscribes to event
-		
+		// Skip if object does not subscribe to event
 		if(obj.Events["mouseMove"] == null) { continue; }
 		
 		// Detect if object is where the mouse is
 		if(detectCollision(App.MouseX, App.MouseY, obj.XPosition, obj.YPosition, obj.Width, obj.Height)
-			|| key == "tracking")
+			|| key == "tracking") // ignore tracking for debugging purposes
 		{
+			obj.IsHovered = true;
 			obj.Events.mouseMove(obj);
+		}
+	}
+}
+
+App.UI.DetectMouseLeave = function(e) {
+	// Loop through draw objects and detect which ones respond to the event
+	for(var i = 0; i < App.UI.DrawObjects.length; i++) {
+		var obj = App.UI.DrawObjects[i].value;
+		var key = App.UI.DrawObjects[i].key;
+		
+		// Skip if object does not subscribe to event
+		if(obj.Events["mouseLeave"] == null) { continue; }
+		
+		// Skip is object is not currently hovered over
+		if(!obj.IsHovered) { continue; }
+		
+		// Detect if mouse is outside the object and it used to be hovered over
+		if(!detectCollision(App.MouseX, App.MouseY, obj.XPosition, obj.YPosition, obj.Width, obj.Height))
+		{
+			obj.IsHovered = false;
+			obj.Events.mouseLeave(obj);
 		}
 	}
 }
@@ -132,6 +155,7 @@ class UI_Shape {
 		this.Height = height || 0;
 		// Attach events to the object
 		this.Events = events == null ? Object.create(null) : events;
+		this.IsHovered = false;
 	}
 }
 
