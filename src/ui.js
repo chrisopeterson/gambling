@@ -49,11 +49,12 @@ App.UI.PrepInterface = function() {
 	var track = new UI_Rectangle(440, 12, 0, 0, null, 'none', track_events);
 	App.UI.AddDrawObject("tracking", track);
 	
+	/*
 	// Pass line
 	var pass_events = {
 		"mouseMove" : function(obj) { obj.fillText = "Pass Line - Hover" },
 		"mouseLeave" : function(obj) { obj.fillText = "Pass Line - Leave"},
-		"onClick" : function(obj) { alert("You clicked the pass line!" ) }
+		"onClick" : function(obj) { obj.Parent.MakeBet() }
 	}
 	
 	var passLine = new UI_RectangleBorder(10, 400, 480, 40, null, '#ffffff', 2, 'Pass Line', pass_events);
@@ -62,6 +63,12 @@ App.UI.PrepInterface = function() {
 	// Dont Pass Line
 	var dontPassLine = new UI_RectangleBorder(10, 350, 480, 40, null, '#ffffff', 2, 'Don\'t Pass Line', null);
 	App.UI.AddDrawObject("dontPassline", dontPassLine);
+	*/
+	
+	// There has to be a link between the UI and the model. I need to have a controller or similar structure
+	// To instantiate the models, instantiate the UI, and link the UI pieces to the models so I can pass_events
+	// info between them.
+	// Right now the UI and models are totally separate and can't interact.
 	
 	//  Draw
 	App.UI.Draw();
