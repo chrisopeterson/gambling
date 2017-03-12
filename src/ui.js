@@ -38,40 +38,60 @@ App.UI.Draw = function() {
 App.UI.PrepInterface = function() {
 
 	// Green Background
-	var bg = new UI_Rectangle(0, 0, 500, 500, '#478d47', null, null);
+	//
+	var bg = new UI_Rectangle(0, 0, 800, 600, '#478d47', null, null);
 	App.UI.AddDrawObject("background", bg);
 	
 	// x/y coordinates for dev use
+	//
 	var track_events = {
 		"mouseMove" : function(obj) { obj.fillText = "x: " + App.MouseX + " y: " + App.MouseY }
 	}
 	
-	var track = new UI_Rectangle(440, 12, 0, 0, null, 'none', track_events);
+	var track = new UI_Rectangle(740, 12, 0, 0, null, 'none', track_events);
 	App.UI.AddDrawObject("tracking", track);
 	
-	/*
 	// Pass line
+	//
 	var pass_events = {
 		"mouseMove" : function(obj) { obj.fillText = "Pass Line - Hover" },
-		"mouseLeave" : function(obj) { obj.fillText = "Pass Line - Leave"},
-		"onClick" : function(obj) { obj.Parent.MakeBet() }
-	}
-	
-	var passLine = new UI_RectangleBorder(10, 400, 480, 40, null, '#ffffff', 2, 'Pass Line', pass_events);
+		"mouseLeave" : function(obj) { obj.fillText = "Pass Line"},
+		"onClick" : function(obj) { null }
+	};
+
+	var passLine = new UI_RectangleBorder(10, 400, 480, 40, null, '#ffffff', 2, 'Pass', pass_events);
 	App.UI.AddDrawObject("passline", passLine);
+
+	// don't pass line
+	var dont_pass_events = {
+		"mouseMove" : function(obj) { obj.fillText = "Don\'t Pass - Hover" },
+		"mouseLeave" : function(obj) { obj.fillText = "Don\'t Pass"},
+		"onClick" : function(obj) { null }
+	};
 	
-	// Dont Pass Line
-	var dontPassLine = new UI_RectangleBorder(10, 350, 480, 40, null, '#ffffff', 2, 'Don\'t Pass Line', null);
+	var dontPassLine = new UI_RectangleBorder(10, 350, 480, 40, null, '#ffffff', 2, 'Don\'t Pass', dont_pass_events);
 	App.UI.AddDrawObject("dontPassline", dontPassLine);
-	*/
-	
-	// There has to be a link between the UI and the model. I need to have a controller or similar structure
-	// To instantiate the models, instantiate the UI, and link the UI pieces to the models so I can pass_events
-	// info between them.
-	// Right now the UI and models are totally separate and can't interact.
-	
-	//  Draw
-	App.UI.Draw();
+
+	// Point Numbers
+	//
+	var pointEvents = {
+		"onClick" : function(obj) {
+
+			App.State.Point = obj.Number;
+
+			// Left off here...
+			// I can draw the interface as I am doing here
+			// with one piece at a time, And can call into the app State
+			// need to provide common methods to alter the state for things like betting
+			// so i'm not just editing it on the fly.
+		}
+	}
+
+	var pointSix = new PointNumber(50,50,50,50, 6, pointEvents);
+	App.UI.AddDrawObject("pointSix", pointSix);
+
+	var pointEight = new PointNumber(110,50,50,50, 8, pointEvents);
+	App.UI.AddDrawObject("pointEight", pointEight);
 };
 
 

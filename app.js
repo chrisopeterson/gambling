@@ -11,6 +11,7 @@ App.Init = function(canvas) {
 	
 	//Set global vars
 	App.Draw_CTX = canvas.getContext('2d');
+    App.Draw_CTX.font = '20px Arial';
 	App.MouseX = 0;
 	App.MouseY = 0;
 	
